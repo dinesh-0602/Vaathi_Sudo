@@ -9,6 +9,7 @@ lxml
 megasdkrestclient
 psutil
 Pyrogram
+psycopg2-binary
 python-dotenv
 python-magic
 python-telegram-bot

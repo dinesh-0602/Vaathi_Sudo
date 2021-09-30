@@ -9,8 +9,11 @@ class _BotCommands:
         self.CancelAllCommand = "cancelall"
         self.ListCommand = "list"
         self.StatusCommand = "status"
-        self.AuthorizeCommand = "authorize"
-        self.UnAuthorizeCommand = "unauthorize"
+        self.AuthorizedUsersCommand = 'users'
+        self.AuthorizeCommand = 'authorize'
+        self.UnAuthorizeCommand = 'unauthorize'
+        self.AddSudoCommand = 'addsudo'
+        self.RmSudoCommand = 'rmsudo'
         self.PingCommand = "ping"
         self.RestartCommand = "restart"
         self.StatsCommand = "stats"

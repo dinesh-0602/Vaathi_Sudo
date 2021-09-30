@@ -117,7 +117,7 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 /{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
 
 """
-    sendMessage(help_string, context.bot, update)
+    sendMessage(help_string, context.bot, update, disable_web_page_preview=True)
 
 
 botcmds = [
@@ -166,7 +166,7 @@ def main():
     restart_handler = CommandHandler(
         BotCommands.RestartCommand,
         restart,
-        filters=CustomFilters.owner_filter,
+        filters=CustomFilters.owner_filter | CustomFilters.sudo_user,
         run_async=True,
     )
     help_handler = CommandHandler(
@@ -182,7 +182,7 @@ def main():
         run_async=True,
     )
     log_handler = CommandHandler(
-        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True
+        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True
     )
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)

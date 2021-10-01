@@ -82,7 +82,7 @@ class MegaDownloader:
             self.__onDownloadComplete()
             return
         if dlInfo["state"] == constants.State.TYPE_STATE_CANCELED:
-            self.__onDownloadError("Cancelled by user")
+            self.__onDownloadError("Cancelled by user!")
             return
         if dlInfo["state"] == constants.State.TYPE_STATE_FAILED:
             self.__onDownloadError(dlInfo["error_string"])
@@ -111,7 +111,7 @@ class MegaDownloader:
         file_name = info["name"]
         file_size = info["total_length"]
         self.__onDownloadStart(file_name, file_size, gid)
-        LOGGER.info(f"Started mega download with gid: {gid}")
+        LOGGER.info(f"Started Mega download with GID: {gid}")
 
     def cancel_download(self):
         LOGGER.info(f"Cancelling download on user request: {self.gid}")

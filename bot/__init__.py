@@ -77,7 +77,7 @@ try:
         exit()
 except KeyError:
     pass
-	CWD = os.getcwd()
+CWD = os.getcwd()
 ariaconfig = pkgutil.get_data("bot", "data/aria.conf").decode()
 dhtfile = pkgutil.get_data("bot", "data/dht.dat")
 dht6file = pkgutil.get_data("bot", "data/dht6.dat")

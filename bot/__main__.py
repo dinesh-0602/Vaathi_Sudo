@@ -117,7 +117,7 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 /{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
 
 """
-    sendMessage(help_string, context.bot, update, disable_web_page_preview=True)
+    sendMessage(help_string, context.bot, update)
 
 
 botcmds = [

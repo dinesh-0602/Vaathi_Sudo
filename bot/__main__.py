@@ -92,7 +92,6 @@ def bot_help(update, context):
 /{BotCommands.HelpCommand}: To get this message
 
 /{BotCommands.MirrorCommand} [download_url][magnet_link]: Start mirroring the link to google drive.
-Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
 
 /{BotCommands.UnzipMirrorCommand} [download_url][magnet_link] : starts mirroring and if downloaded file is any archive , extracts it to google drive
 
@@ -123,7 +122,6 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 
 
 botcmds = [
-    (f"{BotCommands.HelpCommand}", "Get detailed help"),
     (f"{BotCommands.MirrorCommand}", "Start mirroring"),
     (f"{BotCommands.TarMirrorCommand}", "Start mirroring and upload as .tar"),
     (f"{BotCommands.ZipMirrorCommand}", "Start mirroring and upload as .zip"),

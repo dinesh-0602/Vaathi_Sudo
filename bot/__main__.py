@@ -7,8 +7,10 @@ from sys import executable
 import psutil
 from pyrogram import idle
 from telegram.ext import CommandHandler
+from quoters import Quote
+from telegram import ParseMode
 
-from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater
+from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater, AUTHORIZED_CHATS
 from bot.helper.ext_utils import fs_utils
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -143,12 +145,20 @@ botcmds = [
 
 def main():
     fs_utils.start_cleanup()
+    quo_te = Quote.print()
     # Check if the bot is restarting
     if os.path.isfile(".restartmsg"):
         with open(".restartmsg") as f:
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
+        elif AUTHORIZED_CHATS:
+        for i in AUTHORIZED_CHATS:
+            try:
+                text = f"<code>{quo_te}</code>\n\nBot Rebooted!♻️"
+                bot.sendMessage(chat_id=i, text=text, parse_mode=ParseMode.HTML)
+            except Exception as e:
+                LOGGER.warning(e)
     bot.set_my_commands(botcmds)
 
     start_handler = CommandHandler(

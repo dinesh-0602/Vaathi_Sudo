@@ -150,7 +150,7 @@ def main():
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
-        elif AUTHORIZED_CHATS:
+    elif AUTHORIZED_CHATS:
         for i in AUTHORIZED_CHATS:
             try:
                 text = f"<code>{quo_te}</code>\n\nBot Rebooted!♻️"

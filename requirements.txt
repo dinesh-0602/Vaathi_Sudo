@@ -18,3 +18,4 @@ telegraph
 tenacity
 TgCrypto
 yt-dlp
+quoters

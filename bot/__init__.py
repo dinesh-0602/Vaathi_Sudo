@@ -1,4 +1,3 @@
-import faulthandler
 import logging
 import os
 import random
@@ -7,21 +6,22 @@ import string
 import threading
 import requests
 import time
+import subprocess
+import psycopg2
+import pkgutil
+import pathlib
+import sys
+
 
 import aria2p
 import telegram.ext as tg
 from dotenv import load_dotenv
 from pyrogram import Client
 from telegraph import Telegraph
-
-import subprocess
-
-import psycopg2
 from psycopg2 import Error
+from megasdkrestclient import MegaSdkRestClient, errors as mega_err
 
-from megasdkrestclient import MegaSdkRestClient
-from megasdkrestclient import errors as mega_err
-
+import faulthandler
 faulthandler.enable()
 
 socket.setdefaulttimeout(600)
@@ -77,6 +77,33 @@ try:
         exit()
 except KeyError:
     pass
+	CWD = os.getcwd()
+ariaconfig = pkgutil.get_data("bot", "data/aria.conf").decode()
+dhtfile = pkgutil.get_data("bot", "data/dht.dat")
+dht6file = pkgutil.get_data("bot", "data/dht6.dat")
+with open("dht.dat", "wb+") as dht:
+    dht.write(dhtfile)
+with open("dht6.dat", "wb+") as dht6:
+    dht6.write(dhtfile)
+ariaconfig = ariaconfig.replace("/currentwd", str(CWD))
+try:
+    max_dl = getConfig("MAX_CONCURRENT_DOWNLOADS")
+except KeyError:
+    max_dl = "4"
+tracker_list = requests.get("https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt").text
+ariaconfig += f"\nmax-concurrent-downloads={max_dl}\nbt-tracker={tracker_list}"
+with open("aria.conf", "w+") as ariaconf:
+    ariaconf.write(ariaconfig)
+ARIA_CHILD_PROC = None
+try:
+    ARIA_CHILD_PROC = subprocess.Popen(["aria2c", f"--conf-path={CWD}/aria.conf"])
+except FileNotFoundError:
+    LOGGER.error("Please install Aria2c, Exiting..")
+    sys.exit(0)
+except OSError:
+    LOGGER.error("Aria2c Binary might have got damaged, Please Check and reinstall..")
+    sys.exit(0)
+time.sleep(1)
 
 aria2 = aria2p.API(
     aria2p.Client(
@@ -180,35 +207,37 @@ telegraph_token = telegraph.get_access_token()
 LOGGER.info("Telegraph Token Generated: '" + telegraph_token + "'")
 
 try:
-    MEGA_KEY = getConfig("MEGA_KEY")
-
+    MEGA_KEY = getConfig('MEGA_KEY')
 except KeyError:
     MEGA_KEY = None
-    LOGGER.info("MEGA API KEY NOT AVAILABLE")
+    LOGGER.info('MEGA API KEY NOT AVAILABLE')
+MEGA_CHILD_PROC = None
 if MEGA_KEY is not None:
-    # Start megasdkrest binary
-    subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
-    time.sleep(3)  # Wait for the mega server to start listening
-    mega_client = MegaSdkRestClient("http://localhost:6090")
     try:
-        MEGA_USERNAME = getConfig("MEGA_USERNAME")
-        MEGA_PASSWORD = getConfig("MEGA_PASSWORD")
+        MEGA_CHILD_PROC = subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
+    except FileNotFoundError:
+        LOGGER.error("Please install Megasdkrest Binary, Exiting..")
+        sys.exit(0)
+    except OSError:
+        LOGGER.error("Megasdkrest Binary might have got damaged, Please Check ..")
+        sys.exit(0)
+    time.sleep(3)
+    mega_client = MegaSdkRestClient('http://localhost:6090')
+    try:
+        MEGA_USERNAME = getConfig('MEGA_USERNAME')
+        MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
         if len(MEGA_USERNAME) > 0 and len(MEGA_PASSWORD) > 0:
             try:
                 mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
             except mega_err.MegaSdkRestClientException as e:
-                logging.error(e.message["message"])
+                logging.error(e.message['message'])
                 exit(0)
         else:
-            LOGGER.info(
-                "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!"
-            )
+            LOGGER.info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
             MEGA_USERNAME = None
             MEGA_PASSWORD = None
     except KeyError:
-        LOGGER.info(
-            "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!"
-        )
+        LOGGER.info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
         MEGA_USERNAME = None
         MEGA_PASSWORD = None
 else:

@@ -112,13 +112,13 @@ class MirrorListener(listeners.MirrorListeners):
                     path = fs_utils.tar(m_path)
             except FileNotFoundError:
                 LOGGER.info("File to archive not found!")
-                self.onUploadError("Internal error occurred!!")
+                self.onUploadError("Internal error occurred!")
                 return
         elif self.extract:
             download.is_extracting = True
             try:
                 path = fs_utils.get_base_name(m_path)
-                LOGGER.info(f"Extracting : {name} ")
+                LOGGER.info(f"Extracting: {name} ")
                 with download_dict_lock:
                     download_dict[self.uid] = ExtractStatus(name, m_path, size)
                 pswd = self.pswd
@@ -128,14 +128,14 @@ class MirrorListener(listeners.MirrorListeners):
                     archive_result = subprocess.run(["extract", m_path])
                 if archive_result.returncode == 0:
                     threading.Thread(target=os.remove, args=(m_path,)).start()
-                    LOGGER.info(f"Deleting archive : {m_path}")
+                    LOGGER.info(f"Deleting archive: {m_path}")
                 else:
-                    LOGGER.warning("Unable to extract archive! Uploading anyway")
+                    LOGGER.warning("Unable to extract archive! Uploading anyway.")
                     path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
-                LOGGER.info(f"got path : {path}")
+                LOGGER.info(f"got path: {path}")
 
             except NotSupportedExtractionArchive:
-                LOGGER.info("Not any valid archive, uploading file as it is.")
+                LOGGER.info("Not any valid archive, uploading file as it is!")
                 path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
         else:
             path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
@@ -143,7 +143,7 @@ class MirrorListener(listeners.MirrorListeners):
         if up_name == "None":
             up_name = "".join(os.listdir(f"{DOWNLOAD_DIR}{self.uid}/"))
         up_path = f"{DOWNLOAD_DIR}{self.uid}/{up_name}"
-        LOGGER.info(f"Upload Name : {up_name}")
+        LOGGER.info(f"Upload Name: {up_name}")
         drive = gdriveTools.GoogleDriveHelper(up_name, self)
         size = fs_utils.get_path_size(up_path)
         upload_status = UploadStatus(drive, size, self)
@@ -185,7 +185,7 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onUploadComplete(self, link: str, size):
         with download_dict_lock:
-            msg = f"<b>Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>Size : </b><code>{size}</code>"
+            msg = f"<b>Filename:</b> <code>{download_dict[self.uid].name()}</code>\n<b>Size:</b> <code>{size}</code>"
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(
@@ -220,7 +220,7 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f"\n\ncc : {uname}"
+                msg += f"\n\ncc: {uname}"
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
@@ -318,7 +318,7 @@ def _mirror(bot, update, isTar=False, isZip=False, extract=False):
     else:
         tag = None
     if not bot_utils.is_url(link) and not bot_utils.is_magnet(link):
-        sendMessage("No download source provided", bot, update)
+        sendMessage("No download source provided!", bot, update)
         return
 
     try:
@@ -329,7 +329,7 @@ def _mirror(bot, update, isTar=False, isZip=False, extract=False):
     if bot_utils.is_gdrive_link(link):
         if not isZip and not extract:
             sendMessage(
-                f"Use /{BotCommands.CloneCommand} To Copy File/Folder", bot, update
+                f"Use /{BotCommands.CloneCommand} to copy File/Folder", bot, update
             )
             return
         res, size, name = gdriveTools.GoogleDriveHelper().clonehelper(link)
@@ -357,7 +357,7 @@ def _mirror(bot, update, isTar=False, isZip=False, extract=False):
         sendStatusMessage(update, bot)
     elif bot_utils.is_mega_link(link) and BLOCK_MEGA_LINKS:
         sendMessage(
-            "Mega links are blocked. Dont try to mirror mega links.", bot, update
+            "Mega links are blocked! Dont try to mirror Mega links.", bot, update
         )
     else:
         ariaDlManager.add_download(

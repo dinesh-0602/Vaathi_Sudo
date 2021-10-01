@@ -8,6 +8,7 @@ js2py
 lxml
 megasdkrestclient
 psutil
+progress
 Pyrogram
 psycopg2-binary
 python-dotenv
@@ -19,3 +20,4 @@ tenacity
 TgCrypto
 yt-dlp
 quoters
+messages

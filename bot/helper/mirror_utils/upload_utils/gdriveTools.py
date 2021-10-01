@@ -271,7 +271,7 @@ class GoogleDriveHelper:
         try:
             file_id = self.getIdFromUrl(link)
         except (KeyError, IndexError):
-            msg = "Google drive ID could not be found in the provided link"
+            msg = "Google Drive ID could not be found in the provided link!"
             return msg
         msg = ""
         try:
@@ -280,13 +280,13 @@ class GoogleDriveHelper:
                 .delete(fileId=file_id, supportsTeamDrives=IS_TEAM_DRIVE)
                 .execute()
             )
-            msg = "Successfully deleted"
+            msg = "Successfully deleted!"
         except HttpError as err:
             LOGGER.error(str(err))
             if "File not found" in str(err):
-                msg = "No such file exist"
+                msg = "File not found!"
             else:
-                msg = "Something went wrong check log"
+                msg = "Something went wrong check log!"
         finally:
             return msg
 
@@ -305,7 +305,7 @@ class GoogleDriveHelper:
                 mime_type = get_mime_type(file_path)
                 link = self.upload_file(file_path, file_name, mime_type, parent_id)
                 if link is None:
-                    raise Exception("Upload has been manually cancelled")
+                    raise Exception("Upload has been manually cancelled!")
                 LOGGER.info("Uploaded To G-Drive: " + file_path)
             except Exception as e:
                 if isinstance(e, RetryError):
@@ -341,7 +341,7 @@ class GoogleDriveHelper:
                 self.updater.cancel()
         LOGGER.info(download_dict)
         self.__listener.onUploadComplete(link, size)
-        LOGGER.info("Deleting downloaded file/folder..")
+        LOGGER.info("Deleting downloaded file/folder!")
         return link
 
     @retry(
@@ -422,7 +422,7 @@ class GoogleDriveHelper:
         try:
             file_id = self.getIdFromUrl(link)
         except (KeyError, IndexError):
-            msg = "Google drive ID could not be found in the provided link"
+            msg = "Google drive ID could not be found in the provided link!"
             return msg, ""
         msg = ""
         LOGGER.info(f"File ID: {file_id}")
@@ -433,7 +433,7 @@ class GoogleDriveHelper:
                 self.cloneFolder(
                     meta.get("name"), meta.get("name"), meta.get("id"), dir_id
                 )
-                msg += f'<b>Filename : </b><code>{meta.get("name")}</code>\n<b>Size : </b>{get_readable_file_size(self.transferred_size)}'
+                msg += f'<b>Filename:</b> <code>{meta.get("name")}</code>\n<b>Size:</b> <code>{get_readable_file_size(self.transferred_size)}</code>'
                 durl = self.__G_DRIVE_DIR_BASE_DOWNLOAD_URL.format(dir_id)
                 buttons = button_build.ButtonMaker()
                 if SHORTENER is not None and SHORTENER_API is not None:
@@ -455,7 +455,7 @@ class GoogleDriveHelper:
                         buttons.buildbutton("Index Link", url)
             else:
                 file = self.copyFile(meta.get("id"), parent_id)
-                msg += f'<b>Filename : </b><code>{file.get("name")}</code>'
+                msg += f'<b>Filename:</b> <code>{file.get("name")}</code>'
                 durl = self.__G_DRIVE_BASE_DOWNLOAD_URL.format(file.get("id"))
                 buttons = button_build.ButtonMaker()
                 if SHORTENER is not None and SHORTENER_API is not None:
@@ -466,7 +466,7 @@ class GoogleDriveHelper:
                 else:
                     buttons.buildbutton("Drive Link", durl)
                 try:
-                    msg += f'\n<b>Size : </b><code>{get_readable_file_size(int(meta.get("size")))}</code>'
+                    msg += f'\n<b>Size:</b> <code>{get_readable_file_size(int(meta.get("size")))}</code>'
                 except TypeError:
                     pass
                 if INDEX_URL is not None:
@@ -617,9 +617,9 @@ class GoogleDriveHelper:
                     nxt_page += 1
             Telegraph(access_token=telegraph_token).edit_page(
                 path=self.path[prev_page],
-                title="Mirror Bot Search",
-                author_name="Mirror Bot",
-                author_url="https://github.com/magneto261290/magneto-python-aria",
+                title="Vaathi",
+                author_name="bodysoda69",
+                author_url="https://github.com/bodysoda69/Vaathi-",
                 html_content=content,
             )
         return
@@ -653,7 +653,7 @@ class GoogleDriveHelper:
         if not response["files"]:
             return "", ""
 
-        msg += f"<h4>Results : {fileName}</h4><br><br>"
+        msg += f"<h4>Showing results for: <b>{fileName}</b></h4><br><br>"
 
         for file in response.get("files", []):
             if (
@@ -711,14 +711,14 @@ class GoogleDriveHelper:
             self.telegraph_content.append(msg)
 
         if len(self.telegraph_content) == 0:
-            return "No Result Found :(", None
+            return "No results found!", None
 
         for content in self.telegraph_content:
             self.path.append(
                 Telegraph(access_token=telegraph_token).create_page(
-                    title="Mirror Bot Search",
-                    author_name="Mirror Bot",
-                    author_url="https://github.com/magneto261290/magneto-python-aria",
+                    title="Vaathi",
+                    author_name="bodysoda69",
+                    author_url="https://github.com/bodysoda69/Vaathi-",
                     html_content=content,
                 )["path"]
             )
@@ -727,7 +727,7 @@ class GoogleDriveHelper:
         if self.num_of_path > 1:
             self.edit_telegraph()
 
-        msg = f"<b>Search Results For {fileName} </b>"
+        msg = f"Search results for: {fileName}"
         buttons = button_build.ButtonMaker()
         buttons.buildbutton("HERE", f"https://telegra.ph/{self.path[0]}")
 
@@ -756,7 +756,7 @@ class GoogleDriveHelper:
         try:
             file_id = self.getIdFromUrl(link)
         except (KeyError, IndexError):
-            msg = "Google drive ID could not be found in the provided link"
+            msg = "Google drive ID could not be found in the provided link!"
             return msg, "", ""
         LOGGER.info(f"File ID: {file_id}")
         try:
@@ -787,7 +787,7 @@ class GoogleDriveHelper:
             err = str(err).replace(">", "").replace("<", "")
             LOGGER.error(err)
             if "File not found" in str(err):
-                msg = "File not found."
+                msg = "File not found!"
             else:
                 msg = f"Error.\n{err}"
             return msg, "", ""

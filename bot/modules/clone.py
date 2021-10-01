@@ -24,7 +24,7 @@ def cloneNode(update, context):
         else:
             sendMarkup(result, context.bot, update, button)
     else:
-        sendMessage("Provide G-Drive Shareable Link to Clone.", context.bot, update)
+        sendMessage("Provide G-Drive Shareable Link to Clone!", context.bot, update)
 
 
 clone_handler = CommandHandler(

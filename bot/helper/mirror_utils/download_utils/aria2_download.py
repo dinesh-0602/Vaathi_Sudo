@@ -3,7 +3,7 @@ from time import sleep
 
 from aria2p import API
 
-from bot import aria2, download_dict_lock
+from bot import aria2, download_dict_lock, STOP_DUPLICATE_MIRROR
 from bot.helper.ext_utils.bot_utils import (
     LOGGER,
     download_dict,
@@ -27,6 +27,19 @@ class AriaDownloadHelper(DownloadHelper):
         LOGGER.info(f"onDownloadStart: {gid}")
         download = api.get_download(gid)
         self.name = download.name
+        if STOP_DUPLICATE_MIRROR:
+          if dl.getListener().isTar == True:
+            sname = sname + ".tar"
+          if dl.getListener().extract == True:
+            smsg = None
+          else:
+            gdrive = GoogleDriveHelper(None)
+            smsg, button = gdrive.drive_list(sname)
+          if smsg:
+              dl.getListener().onDownloadError(f'This file is already available in Drive.')
+              sendMarkup("HERE", dl.getListener().bot, dl.getListener().update, button)
+              aria2.remove([download])
+          return
         update_all_messages()
 
     def __onDownloadComplete(self, api: API, gid):

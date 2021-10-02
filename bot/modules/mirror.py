@@ -34,7 +34,6 @@ from bot import (
     download_dict_lock,
     TAR_UNZIP_LIMIT,
     TG_SPLIT_SIZE,
-    OWNER_ID,
 )
 from bot.helper.ext_utils import bot_utils, fs_utils
 from bot.helper.ext_utils.bot_utils import setInterval

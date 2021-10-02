@@ -13,7 +13,6 @@ from .exceptions import NotSupportedExtractionArchive
 from PIL import Image
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
-from fsplit.filesplit import Filesplit
 
 VIDEO_SUFFIXES = ("M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPG", "WEBM", "MKV", "AVI")
 

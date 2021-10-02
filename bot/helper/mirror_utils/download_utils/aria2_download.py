@@ -27,9 +27,12 @@ class AriaDownloadHelper(DownloadHelper):
         LOGGER.info(f"onDownloadStart: {gid}")
         download = api.get_download(gid)
         self.name = download.name
+        sname = download.name
         if STOP_DUPLICATE_MIRROR:
           if dl.getListener().isTar == True:
             sname = sname + ".tar"
+          if dl.getListener().isZip == True:
+            sname = sname + ".zip"
           if dl.getListener().extract == True:
             smsg = None
           else:

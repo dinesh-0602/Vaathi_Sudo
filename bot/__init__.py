@@ -233,11 +233,11 @@ if MEGA_KEY is not None:
                 logging.error(e.message["message"])
                 exit(0)
         else:
-            LOGGER.info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+            LOGGER.info("Mega API KEY provided but credentials not provided. Starting Mega in anonymous mode!")
             MEGA_USERNAME = None
             MEGA_PASSWORD = None
     except KeyError:
-        LOGGER.info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+        LOGGER.info("Mega API KEY provided but credentials not provided. Starting Mega in anonymous mode!")
         MEGA_USERNAME = None
         MEGA_PASSWORD = None
 else:
@@ -338,6 +338,14 @@ try:
         os.remove("accounts.zip")
 except KeyError:
     pass
+try:
+    STOP_DUPLICATE_MIRROR = getConfig('STOP_DUPLICATE_MIRROR')
+    if STOP_DUPLICATE_MIRROR.lower() == 'true':
+        STOP_DUPLICATE_MIRROR = True
+    else:
+        STOP_DUPLICATE_MIRROR = False
+except KeyError:
+    STOP_DUPLICATE_MIRROR = False
 
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot

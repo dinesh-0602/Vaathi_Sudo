@@ -32,7 +32,6 @@ from bot import (
     dispatcher,
     download_dict,
     download_dict_lock,
-    TAR_UNZIP_LIMIT,
     TG_SPLIT_SIZE,
 )
 from bot.helper.ext_utils import bot_utils, fs_utils

@@ -1,6 +1,5 @@
 import threading
 from time import sleep
-
 from aria2p import API
 
 from bot import aria2, download_dict_lock, STOP_DUPLICATE_MIRROR
@@ -14,6 +13,7 @@ from bot.helper.ext_utils.bot_utils import (
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
 from bot.helper.telegram_helper.message_utils import update_all_messages
 from .download_helper import DownloadHelper
+from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 
 
 class AriaDownloadHelper(DownloadHelper):

@@ -13,13 +13,13 @@ URL_REGEX = r"(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+"
 
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Uploading..."
-    STATUS_DOWNLOADING = "Downloading..."
-    STATUS_WAITING = "Queued..."
-    STATUS_FAILED = "Failed. Cleaning download..."
-    STATUS_CANCELLED = "Cancelled."
-    STATUS_ARCHIVING = "Archiving..."
-    STATUS_EXTRACTING = "Extracting..."
+    STATUS_UPLOADING = "Uploading...📤"
+    STATUS_DOWNLOADING = "Downloading...📥"
+    STATUS_WAITING = "Queued...📝"
+    STATUS_FAILED = "Failed. 🚫 Cleaning download..."
+    STATUS_CANCELLED = "Cancelled. ❌ Cleaning download..."
+    STATUS_ARCHIVING = "Archiving...🔐"
+    STATUS_EXTRACTING = "Extracting...📂"
 
 
 PROGRESS_MAX_SIZE = 100 // 8
@@ -101,22 +101,23 @@ def get_readable_message():
                 MirrorStatus.STATUS_ARCHIVING,
                 MirrorStatus.STATUS_EXTRACTING,
             ]:
-                msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code>"
+                msg += f"\n<code>{get_progress_bar_string(download)}</code> - {download.progress()}"
                 if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                    msg += f"\n<b>Downloaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>Downloaded:</b> <code>{get_readable_file_size(download.processed_bytes())}</code> / <code>{download.size()}</code>"
                 else:
-                    msg += f"\n<b>Uploaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                msg += f"\n<b>Speed:</b> {download.speed()}, \n<b>ETA:</b> {download.eta()} "
+                    msg += f"\n<b>Uploaded:</b> <code>{get_readable_file_size(download.processed_bytes())}</code> / <code>{download.size()}</code>"
+                msg += f"\n<b>Speed:</b> <code>{download.speed()}</code>"
+                msg += f"\n<b>ETA:</b> <code>{download.eta()}</code>"
                 # if hasattr(download, 'is_torrent'):
                 try:
                     msg += (
-                        f"\n<b>Seeders:</b> {download.aria_download().num_seeders}"
-                        f" & <b>Peers:</b> {download.aria_download().connections}"
+                        f"\n<b>Seeders:</b> <code>{download.aria_download().num_seeders}</code>"
+                        f"\n<b>Peers:</b> <code>{download.aria_download().connections}</code>"
                     )
                 except:
                     pass
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                msg += f"\n<b>GID:</b> <code>{download.gid()}</code>"
+                msg += f"\n<b>To Cancel:</b> <code>{download.gid()}</code>"
             msg += "\n\n"
         return msg
 

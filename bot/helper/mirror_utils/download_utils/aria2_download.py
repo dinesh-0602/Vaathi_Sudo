@@ -11,7 +11,7 @@ from bot.helper.ext_utils.bot_utils import (
     new_thread,
 )
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
-from bot.helper.telegram_helper.message_utils import update_all_messages
+from bot.helper.telegram_helper.message_utils import *
 from .download_helper import DownloadHelper
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 

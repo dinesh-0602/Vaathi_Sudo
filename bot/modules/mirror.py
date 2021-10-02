@@ -146,11 +146,9 @@ class MirrorListener(listeners.MirrorListeners):
         else:
             path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
         up_name = pathlib.PurePath(path).name
-        if up_name == "None":
-            up_name = "".join(os.listdir(f"{DOWNLOAD_DIR}{self.uid}/"))
         up_path = f"{DOWNLOAD_DIR}{self.uid}/{up_name}"
         size = fs_utils.get_path_size(up_path)
-        elif self.isLeech:
+        if self.isLeech:
             checked = False
             for dirpath, subdir, files in os.walk(f'{DOWNLOAD_DIR}{self.uid}', topdown=False):
                 for file in files:

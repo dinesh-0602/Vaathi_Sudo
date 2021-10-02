@@ -340,13 +340,14 @@ try:
         os.remove("accounts.zip")
 except KeyError:
     pass
-
 try:
-    TG_SPLIT_SIZE = int(getConfig('TG_SPLIT_SIZE'))
-    if len(f'TG_SPLIT_SIZE') == 0 or TG_SPLIT_SIZE > 2097152000:
+    TG_SPLIT_SIZE = getConfig('TG_SPLIT_SIZE')
+    if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097152000:
         raise KeyError
+    else:
+        TG_SPLIT_SIZE = int(TG_SPLIT_SIZE)
 except KeyError:
-    TG_SPLIT_SIZE = 2097152000
+    TG_SPLIT_SIZE = 2097152000        
 try:
     AS_DOCUMENT = getConfig('AS_DOCUMENT')
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'

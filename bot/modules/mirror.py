@@ -150,7 +150,7 @@ class MirrorListener(listeners.MirrorListeners):
             up_name = "".join(os.listdir(f"{DOWNLOAD_DIR}{self.uid}/"))
         up_path = f"{DOWNLOAD_DIR}{self.uid}/{up_name}"
         size = fs_utils.get_path_size(up_path)
-        if self.isLeech:
+        elif self.isLeech:
             checked = False
             for dirpath, subdir, files in os.walk(f'{DOWNLOAD_DIR}{self.uid}', topdown=False):
                 for file in files:
@@ -456,7 +456,7 @@ def leech(update, context):
     
 
 def tar_leech(update, context):
-    _mirror(context.bot, update, True, isLeech=True)
+    _mirror(context.bot, update, isTar=True, isLeech=True)
     
 
 def unzip_leech(update, context):
@@ -464,7 +464,7 @@ def unzip_leech(update, context):
     
 
 def zip_leech(update, context):
-    _mirror(context.bot, update, True, isZip=True, isLeech=True)   
+    _mirror(context.bot, update, isZip=True, isLeech=True)   
     
 
 mirror_handler = CommandHandler(

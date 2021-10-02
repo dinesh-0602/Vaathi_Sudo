@@ -13,7 +13,6 @@ from bot.helper.ext_utils.bot_utils import (
 )
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
 from bot.helper.telegram_helper.message_utils import update_all_messages
-
 from .download_helper import DownloadHelper
 
 
@@ -25,6 +24,7 @@ class AriaDownloadHelper(DownloadHelper):
     def __onDownloadStarted(self, api, gid):
         sleep(1)
         LOGGER.info(f"onDownloadStart: {gid}")
+        dl = getDownloadByGid(gid)
         download = api.get_download(gid)
         self.name = download.name
         sname = download.name

@@ -7,7 +7,7 @@ import magic
 import subprocess
 import time
 
-from bot import DOWNLOAD_DIR, LOGGER, get_client, aria2, TG_SPLIT_SIZE
+from bot import DOWNLOAD_DIR, LOGGER, aria2, TG_SPLIT_SIZE
 from .exceptions import NotSupportedExtractionArchive
 
 from PIL import Image

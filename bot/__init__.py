@@ -9,7 +9,6 @@ import time
 import subprocess
 import psycopg2
 import pkgutil
-import pathlib
 import sys
 
 

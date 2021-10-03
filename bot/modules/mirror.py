@@ -29,6 +29,7 @@ from bot import (
     SHORTENER,
     SHORTENER_API,
     Interval,
+    aria2,
     dispatcher,
     download_dict,
     download_dict_lock,

@@ -113,10 +113,7 @@ class MirrorListener(listeners.MirrorListeners):
             try:
                 with download_dict_lock:
                     download_dict[self.uid] = ZipStatus(name, m_path, size)
-                if self.isZip:
-                    path = fs_utils.zip(name, m_path)
-                else:
-                    path = fs_utils.tar(m_path)
+                path = fs_utils.zip(name, m_path) if self.isZip else fs_utils.tar(m_path)
             except FileNotFoundError:
                 LOGGER.info("File to archive not found!")
                 self.onUploadError("Internal error occurred!")

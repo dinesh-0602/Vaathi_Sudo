@@ -113,14 +113,6 @@ except OSError:
     sys.exit(0)
 time.sleep(1)
 
-aria2 = aria2p.API(
-    aria2p.Client(
-        host="http://localhost",
-        port=6800,
-        secret="",
-    )
-)
-
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
 
@@ -349,7 +341,7 @@ try:
 except KeyError:
     pass
 try:
-    TG_SPLIT_SIZE = int(getConfig('TG_SPLIT_SIZE'))
+    TG_SPLIT_SIZE = getConfig('TG_SPLIT_SIZE')
     if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097152000:
         raise KeyError
 except KeyError:

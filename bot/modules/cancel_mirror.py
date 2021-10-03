@@ -49,7 +49,7 @@ def cancel_mirror(update, context):
     elif dl.status() == MirrorStatus.STATUS_SPLITTING:
         sendMessage("Splitting in Progress, Don't Cancel it!", context.bot, update)
         return
-    elif dl.status() == MirrorStatus.STATUS_EXTRACTING::
+    elif dl.status() == MirrorStatus.STATUS_EXTRACTING:
         sendMessage("Extracting in Progress, Don't Cancel it!", context.bot, update)
         return
     else:

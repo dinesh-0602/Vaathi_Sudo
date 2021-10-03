@@ -7,7 +7,7 @@ from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 
 from bot import app, DOWNLOAD_DIR, AS_DOCUMENT, AS_DOC_USERS, AS_MEDIA_USERS
-from bot.helper.ext_utils.fs_utils import take_ss 
+from bot.helper.ext_utils.fs_utils import take_ss
 
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
@@ -129,6 +129,7 @@ class TgUploader:
         except FloodWait as f:
             LOGGER.info(f)
             time.sleep(f.x)
+
     def upload_progress(self, current, total):
         if self.is_cancelled:
             self.__app.stop_transmission()

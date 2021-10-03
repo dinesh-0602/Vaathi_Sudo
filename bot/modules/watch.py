@@ -52,7 +52,7 @@ def _watch(bot: Bot, update, isTar=False, isZip=False, isLeech=False):
     reply_to = update.message.reply_to_message
     tag = reply_to.from_user.username if reply_to is not None else None
     pswd = ""
-    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag)
+    listener = MirrorListener(bot, update, pswd, tag, isTar, isZip, isLeech=isLeech)
     ydl = YoutubeDLHelper(listener)
     threading.Thread(
         target=ydl.add_download,
@@ -67,7 +67,7 @@ def _watch(bot: Bot, update, isTar=False, isZip=False, isLeech=False):
 
 def watch(update, context):
     _watch(context.bot, update)
-    
+
 
 def watchTar(update, context):
     _watch(context.bot, update, isTar=True)
@@ -79,14 +79,14 @@ def watchZip(update, context):
 
 def leechWatch(update, context):
     _watch(context.bot, update, isLeech=True)
-    
+
 
 def leechWatchTar(update, context):
     _watch(context.bot, update, isTar=True, isLeech=True)
-    
+
 
 def leechWatchZip(update, context):
-    _watch(context.bot, update, isZip=True, isLeech=True)  
+    _watch(context.bot, update, isZip=True, isLeech=True)
 
 
 mirror_handler = CommandHandler(
@@ -102,11 +102,11 @@ zip_mirror_handler = CommandHandler(
     run_async=True,
 )
 leech_watch_handler = CommandHandler(BotCommands.LeechWatchCommand, leechWatch,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                     filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 leech_tar_watch_handler = CommandHandler(BotCommands.LeechTarWatchCommand, leechWatchTar,
-                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                         filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 leech_zip_watch_handler = CommandHandler(BotCommands.LeechZipWatchCommand, leechWatchZip,
-                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                         filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 dispatcher.add_handler(mirror_handler)
 dispatcher.add_handler(zip_mirror_handler)
 dispatcher.add_handler(leech_watch_handler)

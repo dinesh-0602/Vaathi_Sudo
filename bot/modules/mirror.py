@@ -400,7 +400,7 @@ def _mirror(bot, update, isTar=False, isZip=False, extract=False, isLeech=False)
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
         LOGGER.info(f"{link}: {e}")
-    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract, isLeech)
+    listener = MirrorListener(bot, update, pswd, isTar, isZip, extract, isLeech)
     if bot_utils.is_gdrive_link(link):
         if not isZip and not extract and not isLeech:
             sendMessage(

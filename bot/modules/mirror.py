@@ -211,7 +211,7 @@ class MirrorListener(listeners.MirrorListeners):
     def onUploadProgress(self):
         pass
 
-    def onUploadComplete(self, link: str, size, files, folders, typ):
+    def onUploadComplete(self, link: str, size):
         if self.isLeech:
             if self.message.from_user.username:
                 uname = f"@{self.message.from_user.username}"

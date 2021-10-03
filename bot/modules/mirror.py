@@ -12,6 +12,7 @@ import shutil
 
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler
+from fnmatch import fnmatch
 
 from bot import (
     BLOCK_MEGA_LINKS,

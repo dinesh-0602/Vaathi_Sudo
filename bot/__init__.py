@@ -77,6 +77,15 @@ try:
         exit()
 except KeyError:
     pass
+
+aria2 = aria2p.API(
+    aria2p.Client(
+        host="http://localhost",
+        port=6800,
+        secret="",
+    )
+)
+
 CWD = os.getcwd()
 ariaconfig = pkgutil.get_data("bot", "data/aria.conf").decode()
 dhtfile = pkgutil.get_data("bot", "data/dht.dat")
@@ -341,18 +350,16 @@ try:
 except KeyError:
     pass
 try:
-    TG_SPLIT_SIZE = getConfig('TG_SPLIT_SIZE')
+    TG_SPLIT_SIZE = int(getConfig('TG_SPLIT_SIZE'))
     if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097152000:
         raise KeyError
-    else:
-        TG_SPLIT_SIZE = int(TG_SPLIT_SIZE)
 except KeyError:
-    TG_SPLIT_SIZE = 2097152000        
+    TG_SPLIT_SIZE = 2097152000
 try:
     AS_DOCUMENT = getConfig('AS_DOCUMENT')
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'
 except KeyError:
-    AS_DOCUMENT = False    
+    AS_DOCUMENT = False
 
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot

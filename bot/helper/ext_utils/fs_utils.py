@@ -7,7 +7,7 @@ import magic
 import subprocess
 import time
 
-from bot import DOWNLOAD_DIR, LOGGER, aria2, TG_SPLIT_SIZE
+from bot import DOWNLOAD_DIR, LOGGER, get_client, aria2, TG_SPLIT_SIZE
 from .exceptions import NotSupportedExtractionArchive
 
 from PIL import Image
@@ -32,6 +32,8 @@ def start_cleanup():
 
 def clean_all():
     aria2.remove_all(True)
+    get_client().torrents_delete(torrent_hashes="all", delete_files=True)
+    get_client().auth_log_out()
     try:
         shutil.rmtree(DOWNLOAD_DIR)
     except FileNotFoundError:
@@ -165,6 +167,7 @@ def get_mime_type(file_path):
     mime_type = mime_type or "text/plain"
     return mime_type
 
+
 def take_ss(video_file):
     des_dir = 'Thumbnails'
     if not os.path.exists(des_dir):
@@ -184,6 +187,7 @@ def take_ss(video_file):
     img.save(des_dir, "JPEG")
     return des_dir
 
+
 def split(path, size, file, dirpath, split_size, start_time=0, i=1):
     if file.upper().endswith(VIDEO_SUFFIXES):
         base_name, extension = os.path.splitext(file)
@@ -193,7 +197,7 @@ def split(path, size, file, dirpath, split_size, start_time=0, i=1):
         while start_time < total_duration:
             parted_name = "{}.part{}{}".format(str(base_name), str(i).zfill(3), str(extension))
             out_path = os.path.join(dirpath, parted_name)
-            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", 
+            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
                             path, "-ss", str(start_time), "-fs", str(split_size),
                             "-strict", "-2", "-c", "copy", out_path])
             out_size = get_path_size(out_path)

@@ -104,11 +104,12 @@ class MirrorListener(listeners.MirrorListeners):
             LOGGER.info(f"Download completed: {download_dict[self.uid].name()}")
             download = download_dict[self.uid]
             name = download.name()
+            gid = download.gid()
             size = download.size_raw()
             if name is None:  # when pyrogram's media.file_name is of NoneType
                 name = os.listdir(f"{DOWNLOAD_DIR}{self.uid}")[0]
             m_path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
-        if self.isZip:
+        if self.isTar:
             download.is_archiving = True
             try:
                 with download_dict_lock:
@@ -179,7 +180,7 @@ class MirrorListener(listeners.MirrorListeners):
             with download_dict_lock:
                 download_dict[self.uid] = upload_status
             update_all_messages()
-            drive.upload(up_name)  
+            drive.upload(up_name)
 
     def onDownloadError(self, error):
         error = error.replace("<", " ")
@@ -212,7 +213,7 @@ class MirrorListener(listeners.MirrorListeners):
     def onUploadProgress(self):
         pass
 
-    def onUploadComplete(self, link: str, size):
+    def onUploadComplete(self, link: str, size, files, folders, typ):
         if self.isLeech:
             if self.message.from_user.username:
                 uname = f"@{self.message.from_user.username}"
@@ -310,7 +311,13 @@ class MirrorListener(listeners.MirrorListeners):
                 pass
             del download_dict[self.message.message_id]
             count = len(download_dict)
-        sendMessage(e_str, self.bot, self.update)
+        if self.message.from_user.username:
+            uname = f"@{self.message.from_user.username}"
+        else:
+            uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
+        if uname is not None:
+            men = f'{uname} '
+        sendMessage(men + e_str, self.bot, self.update)
         if count == 0:
             self.clean()
         else:
@@ -391,14 +398,14 @@ def _mirror(bot, update, isTar=False, isZip=False, extract=False, isLeech=False)
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
         LOGGER.info(f"{link}: {e}")
-    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract)
+    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract, isLeech=isLeech)
     if bot_utils.is_gdrive_link(link):
-        if not isZip and not extract:
+        if not isZip and not extract and not isLeech:
             sendMessage(
                 f"Use /{BotCommands.CloneCommand} to copy File/Folder", bot, update
             )
             return
-        res, size, name = gdriveTools.GoogleDriveHelper().clonehelper(link)
+        res, size, name, files = gdriveTools.GoogleDriveHelper().helper(link)
         if res != "":
             sendMessage(res, bot, update)
             return
@@ -450,23 +457,23 @@ def zip_mirror(update, context):
 
 def unzip_mirror(update, context):
     _mirror(context.bot, update, extract=True)
-    
+
 
 def leech(update, context):
     _mirror(context.bot, update, isLeech=True)
-    
+
 
 def tar_leech(update, context):
     _mirror(context.bot, update, True, isLeech=True)
-    
+
 
 def unzip_leech(update, context):
     _mirror(context.bot, update, extract=True, isLeech=True)
-    
+
 
 def zip_leech(update, context):
-    _mirror(context.bot, update, True, isZip=True, isLeech=True)   
-    
+    _mirror(context.bot, update, True, isZip=True, isLeech=True)
+
 
 mirror_handler = CommandHandler(
     BotCommands.MirrorCommand,
@@ -493,13 +500,13 @@ unzip_mirror_handler = CommandHandler(
     run_async=True,
 )
 leech_handler = CommandHandler(BotCommands.LeechCommand, leech,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                               filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 tar_leech_handler = CommandHandler(BotCommands.TarLeechCommand, tar_leech,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                   filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 unzip_leech_handler = CommandHandler(BotCommands.UnzipLeechCommand, unzip_leech,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                     filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 zip_leech_handler = CommandHandler(BotCommands.ZipLeechCommand, zip_leech,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                   filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 dispatcher.add_handler(mirror_handler)
 dispatcher.add_handler(tar_mirror_handler)
 dispatcher.add_handler(zip_mirror_handler)

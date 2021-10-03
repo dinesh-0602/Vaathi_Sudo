@@ -12,6 +12,7 @@ import shutil
 
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler
+from fnmatch import fnmatch
 
 from bot import (
     BLOCK_MEGA_LINKS,
@@ -29,6 +30,7 @@ from bot import (
     SHORTENER,
     SHORTENER_API,
     Interval,
+    aria2,
     dispatcher,
     download_dict,
     download_dict_lock,
@@ -73,13 +75,12 @@ ariaDlManager.start_listener()
 
 class MirrorListener(listeners.MirrorListeners):
     def __init__(
-        self, bot, update, pswd, isTar=False, isZip=False, tag=None, extract=False, isLeech=False
+        self, bot, update, pswd, isTar=False, isZip=False, extract=False, isLeech=False
     ):
         super().__init__(bot, update)
         self.isTar = isTar
         self.isZip = isZip
         self.isLeech = isLeech
-        self.tag = tag
         self.extract = extract
         self.pswd = pswd
 
@@ -109,6 +110,13 @@ class MirrorListener(listeners.MirrorListeners):
                 name = os.listdir(f"{DOWNLOAD_DIR}{self.uid}")[0]
             m_path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
         if self.isTar:
+            name = str(download.name()).replace('/', '')
+            gid = download.gid()
+            size = download.size_raw()
+            if name is None:  # when pyrogram's media.file_name is of NoneType
+                name = os.listdir(f'{DOWNLOAD_DIR}{self.uid}')[0]
+            m_path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
+        if self.isZip:
             download.is_archiving = True
             try:
                 with download_dict_lock:
@@ -147,9 +155,7 @@ class MirrorListener(listeners.MirrorListeners):
         else:
             path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
         up_name = pathlib.PurePath(path).name
-        if up_name == "None":
-            up_name = "".join(os.listdir(f"{DOWNLOAD_DIR}{self.uid}/"))
-        up_path = f"{DOWNLOAD_DIR}{self.uid}/{up_name}"
+        up_path = f'{DOWNLOAD_DIR}{self.uid}/{up_name}'
         size = fs_utils.get_path_size(up_path)
         if self.isLeech:
             checked = False
@@ -447,11 +453,11 @@ def mirror(update, context):
 
 
 def tar_mirror(update, context):
-    _mirror(context.bot, update, isTar=True)
+    _mirror(context.bot, update, True, isTar=True)
 
 
 def zip_mirror(update, context):
-    _mirror(context.bot, update, isZip=True)
+    _mirror(context.bot, update, True, isZip=True)
 
 
 def unzip_mirror(update, context):
